@@ -12,10 +12,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    const { username, password } = req.body;
+    const { email, password, firstname, lastname, birthday, gender, group, active } = req.body;
 
-    user.createUser(username, password)
+    user.createUser(email, password, firstname, lastname, birthday, gender, group, active)
         .then(() => {
+            console.log('User created successfully!');  // Ajouté ici
             res.send('User created successfully!');
         })
         .catch((error) => {
@@ -24,9 +25,27 @@ app.post('/register', (req, res) => {
         });
 });
 
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    user.loginUser(email, password)
+        .then((user) => {
+            console.log('User logged in successfully!');
+            res.json(user);
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('An error occurred while logging in.');
+        });
+});
+
+app.post('/sendFilms', (req, res) => {
+
+});
+
 app.get('/users', (req, res) => {
     user.getAllUsers()
-        .then(([rows, fields]) => {
+        .then((rows) => {
             res.json(rows);
         })
         .catch((error) => {
